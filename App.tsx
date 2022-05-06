@@ -11,7 +11,7 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { theme } from "./src/theme";
-import { Widget } from "./src/components/Widget";
+import Widget from "./src/components/Widget";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
