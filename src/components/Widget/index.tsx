@@ -6,13 +6,33 @@ import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
 import { styles } from "./styles";
 import { theme } from "../../theme";
+
 import { Options } from "../Options";
+import { Success } from "../Success";
+import { Form } from "../Form";
+
+import { feedbackTypes } from "../../utils/feedbackTypes";
+
+export type FeedbackType = keyof typeof feedbackTypes;
 
 function Widget() {
+  const [feedbackType, setFeedbackType] = React.useState<FeedbackType | null>(
+    null
+  );
+  const [feeedbackSent, setFeedbackSent] = React.useState(false);
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
   function handleOpen() {
     bottomSheetRef.current?.expand();
+  }
+
+  function handleRestartFeedback() {
+    setFeedbackType(null);
+    setFeedbackSent(false);
+  }
+
+  function handleFeedbackSent() {
+    setFeedbackSent(true);
   }
 
   return (
@@ -31,7 +51,23 @@ function Widget() {
         backgroundStyle={styles.modal}
         handleIndicatorStyle={styles.indicator}
       >
-        <Options />
+        {/* <Form feedbackType="IDEA" /> */}
+        {/* <Options /> */}
+        {feeedbackSent ? (
+          <Success onSendAnotherFeedback={handleRestartFeedback} />
+        ) : (
+          <>
+            {feedbackType ? (
+              <Form
+                feedbackType={feedbackType}
+                onFeedbackSent={handleFeedbackSent}
+                onFeedbackTypeCanceled={handleRestartFeedback}
+              />
+            ) : (
+              <Options onFeedbackTypeChanged={setFeedbackType} />
+            )}
+          </>
+        )}
       </BottomSheet>
     </>
   );
